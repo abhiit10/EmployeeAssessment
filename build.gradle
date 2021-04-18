@@ -47,6 +47,7 @@ dependencies {
     compile "org.hibernate:hibernate-core:5.1.5.Final"
     compile "org.grails.plugins:gsp"
     console "org.grails:grails-console"
+    compile 'com.github.jsimone:webapp-runner:8.5.11.3'
     profile "org.grails.profiles:web"
     runtime "org.glassfish.web:el-impl:2.1.2-b03"
     runtime "com.h2database:h2"
@@ -66,6 +67,20 @@ bootRun {
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 }
+
+task stage() {
+    dependsOn clean, war
+}
+war.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+    into "$buildDir/server"
+    from(configurations.compile) {
+        include "webapp-runner*"
+    }
+}
+
+stage.dependsOn(copyToLib)
 
 tasks.withType(Test) {
     systemProperty "geb.env", System.getProperty('geb.env')
