@@ -27,7 +27,7 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form resource="${this.projects}" method="POST">
+            <g:form action="save" method="POST">
                 <fieldset class="form">
                     <div class="fieldcontain required">
                         <label for="projectName"><b>Project Name</b> </label>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="fieldcontain required">
                         <label for="skill"><b>Skill</b> </label>
-                    <g:select id="skill" name='type.id' value=""
+                    <g:select id="skill" name='skill' value=""
                               noSelection="${['null':'Select One...']}"
                               from='${Skills.list()}'
                               optionKey="id" optionValue="skillName" onchange="updateSubSkills(this.value)"></g:select>
@@ -55,7 +55,7 @@
 
                     <div class="fieldcontain required">
                         <label for="skill"><b>Sub Skill</b> </label>
-                        <g:select id="skill" name='type.id' value=""
+                        <g:select id="skill" name='subskill' value=""
                                   noSelection="${['null':'Select One...']}"
                                   from='${employeeassesment.SubSkills.list()}'
                                   optionKey="id" optionValue="name"></g:select>

@@ -7,4 +7,9 @@ class Skills {
 
     static constraints = {
     }
+
+    @Override
+    String toString() {
+        return skillName
+    }
 }

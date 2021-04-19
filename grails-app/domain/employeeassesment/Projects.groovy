@@ -3,6 +3,7 @@ package employeeassesment
 class Projects {
 
     String projectName
+    String description
     Skills skills
     SubSkills subSkills
     QuestionsAndAnswers questionsAndAnswers
@@ -13,6 +14,7 @@ class Projects {
 
     static constraints = {
         skills (nullable: true, blank:true)
+        description (nullable: true, blank:true)
         subSkills(nullable: true, blank:true)
         questionsAndAnswers(nullable: true, blank:true)
     }

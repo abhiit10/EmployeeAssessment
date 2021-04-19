@@ -11,7 +11,7 @@ class ProjectsController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond projectsService.list(params), model:[projectsCount: projectsService.count()]
+        respond projectsService.list(params), model: [projectsCount: projectsService.count()]
     }
 
     def show(Long id) {
@@ -22,27 +22,37 @@ class ProjectsController {
         respond new Projects(params)
     }
 
-    def save(Projects projects) {
-        if (projects == null) {
-            notFound()
-            return
-        }
+    def save() {
+        Projects projects = new Projects()
+        projects.properties = params
+
+        println "params:::::::"+params
+
+        QuestionsAndAnswers questionsAndAnswers = new QuestionsAndAnswers(['question' : params.question, 'answer':params.answer])
+        questionsAndAnswers.save()
+        projects.questionsAndAnswers = questionsAndAnswers
+        projects.skills = Skills.get(params.skill)
+        projects.subSkills = SubSkills.get(params.subskill)
+
+
 
         try {
-            println "projets ::"+projects.properties
+
+            println "projects ::" + projects
+
             projectsService.save(projects)
         } catch (ValidationException e) {
-            respond projects.errors, view:'create'
+            respond view: 'create'
             return
         }
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'projects.label', default: 'Projects'), projects.id])
-                redirect projects
-            }
-            '*' { respond projects, [status: CREATED] }
-        }
+        redirect(action: "show", id : projects.id )
+//        request.withFormat {
+//            form multipartForm {
+//                flash.message = message(code: 'default.created.message', args: [message(code: 'projects.label', default: 'Projects'), projects?.id])
+//                redirect projects
+//            }
+//            '*' { respond projects, [status: CREATED] }
+//        }
     }
 
     def edit(Long id) {
@@ -58,7 +68,7 @@ class ProjectsController {
         try {
             projectsService.save(projects)
         } catch (ValidationException e) {
-            respond projects.errors, view:'edit'
+            respond projects.errors, view: 'edit'
             return
         }
 
@@ -67,7 +77,7 @@ class ProjectsController {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'projects.label', default: 'Projects'), projects.id])
                 redirect projects
             }
-            '*'{ respond projects, [status: OK] }
+            '*' { respond projects, [status: OK] }
         }
     }
 
@@ -82,9 +92,9 @@ class ProjectsController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'projects.label', default: 'Projects'), id])
-                redirect action:"index", method:"GET"
+                redirect action: "index", method: "GET"
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
@@ -94,7 +104,7 @@ class ProjectsController {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'projects.label', default: 'Projects'), params.id])
                 redirect action: "index", method: "GET"
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }

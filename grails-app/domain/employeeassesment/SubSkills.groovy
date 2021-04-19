@@ -8,4 +8,9 @@ class SubSkills {
     static belongsTo = [skill : Skills]
     static constraints = {
     }
+
+    @Override
+    String toString() {
+        return name
+    }
 }

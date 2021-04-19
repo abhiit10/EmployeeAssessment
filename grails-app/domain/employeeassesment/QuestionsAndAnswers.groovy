@@ -7,4 +7,9 @@ class QuestionsAndAnswers {
 
     static constraints = {
     }
+
+    @Override
+    String toString() {
+        return "Q : "+question + " - A : " + answer
+    }
 }
